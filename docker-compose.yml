@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  notification-api:
+    build:
+      context: .
+      dockerfile: NotificationSystem.Api/Dockerfile
+    container_name: notification-container
+    ports:
+      - "5001:5001"
+    environment:
+      - MongoDB__ConnectionURI=${MongoDB__ConnectionURI}
+      - ASPNETCORE_URLS=http://0.0.0.0:5001
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - rabbitmq
+    networks:
+      - rabbitmq_net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"       # Porta de comunicação (AMQP) usada pelos apps
+      - "15672:15672"     # Porta do painel de administração web
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - rabbitmq_net
+  
+  worker:
+    build:
+      context: .
+      dockerfile: NotificationSystem.Worker/Dockerfile
+    depends_on:
+      - rabbitmq
+    networks:
+      - rabbitmq_net
+
+networks:
+  rabbitmq_net:
+    driver: bridge
