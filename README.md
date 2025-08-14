@@ -13,9 +13,6 @@ NotificationSystem/
 ├── docker-compose.yml # Container orchestration (API, Worker, and RabbitMQ)
 └── README.md
 
-yaml
-Copiar
-Editar
 
 ---
 
