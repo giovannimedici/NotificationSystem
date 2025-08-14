@@ -64,6 +64,8 @@ docker-compose up --build
 - Login: guest | Password: guest
 
 - MongoDB: localhost:27017
+  
+---
 
 ## 📬 Testing the API
 ### 📌 Create a user
@@ -76,6 +78,8 @@ Content-Type: application/json
   "email": "john@example.com"
 }
 ```
+---
+
 ## 📌 When creating a user:
 
 - It is saved in MongoDB
@@ -84,10 +88,15 @@ Content-Type: application/json
 
 - The Worker consumes and processes the notification
 
+---
+
 ## 🛠 Communication Flow
 
     A[API - Create User] -->|Publish Message| B[(RabbitMQ)]
     B -->|Consume Message| C[Worker - Process Notification]
     A -->|Save Data| D[(MongoDB)]
+
+---
+
 ## 📄 License
 This project is for study and practice purposes only. Feel free to adapt and use it as a base for your own projects.
