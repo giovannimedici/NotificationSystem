@@ -58,15 +58,15 @@ cd NotificationSystem
 docker-compose up --build
 ```
 ### 3️⃣ Access the services
-API: http://localhost:5001
+- API: http://localhost:5001
 
-RabbitMQ Management: http://localhost:15672
-Login: guest | Password: guest
+- RabbitMQ Management: http://localhost:15672
+- Login: guest | Password: guest
 
-MongoDB: localhost:27017
+- MongoDB: localhost:27017
 
 ## 📬 Testing the API
-### Create a user
+### 📌 Create a user
 ```bash
 POST http://localhost:5001/api/users
 Content-Type: application/json
