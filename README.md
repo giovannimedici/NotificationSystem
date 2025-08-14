@@ -5,14 +5,14 @@ Sample project to practice messaging with **RabbitMQ** using **.NET** (API + Wor
 ---
 
 ## 📌 Project Structure
-
+```bash
 NotificationSystem/
 ├── NotificationSystem.Api # API for user registration and sending messages to RabbitMQ
 ├── NotificationSystem.Worker # Worker that consumes messages from the queue and processes notifications
 ├── NotificationSystem.Shared # Shared classes between API and Worker
 ├── docker-compose.yml # Container orchestration (API, Worker, and RabbitMQ)
 └── README.md
-
+```
 
 ---
 
@@ -62,8 +62,6 @@ docker-compose up --build
 
 - RabbitMQ Management: http://localhost:15672
 - Login: guest | Password: guest
-
-- MongoDB: localhost:27017
   
 ---
 
