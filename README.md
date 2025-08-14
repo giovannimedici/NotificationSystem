@@ -55,12 +55,12 @@ The project uses `docker-compose` to start:
 ```bash
 git clone https://github.com/yourusername/NotificationSystem.git
 cd NotificationSystem
-2️⃣ Start the containers
-bash
-Copiar
-Editar
+```
+### 2️⃣ Start the containers
+```bash
 docker-compose up --build
-3️⃣ Access the services
+```
+### 3️⃣ Access the services
 API: http://localhost:5001
 
 RabbitMQ Management: http://localhost:15672
@@ -70,9 +70,7 @@ MongoDB: localhost:27017
 
 📬 Testing the API
 Create a user
-bash
-Copiar
-Editar
+```bash
 POST http://localhost:5001/api/users
 Content-Type: application/json
 
@@ -80,6 +78,7 @@ Content-Type: application/json
   "name": "John Doe",
   "email": "john@example.com"
 }
+```
 📌 When creating a user:
 
 It is saved in MongoDB
@@ -90,8 +89,6 @@ The Worker consumes and processes the notification
 
 🛠 Communication Flow
 mermaid
-Copiar
-Editar
 flowchart LR
     A[API - Create User] -->|Publish Message| B[(RabbitMQ)]
     B -->|Consume Message| C[Worker - Process Notification]
