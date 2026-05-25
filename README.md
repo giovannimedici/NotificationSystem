@@ -1,100 +1,100 @@
 # 📨 NotificationSystem
 
-Projeto de exemplo para praticar mensageria com **RabbitMQ** utilizando **.NET** (API + Worker) com containers Docker.
+Sample project to practice messaging with **RabbitMQ** using **.NET** (API + Worker) with Docker containers.
 
 ---
 
-## 📌 Estrutura do Projeto
-
+## 📌 Project Structure
+```bash
 NotificationSystem/
-├── NotificationSystem.Api # API para cadastro de usuários e envio de mensagens ao RabbitMQ
-├── NotificationSystem.Worker # Worker que consome mensagens da fila e processa as notificações
-├── NotificationSystem.Shared # Classes compartilhadas entre API e Worker
-├── docker-compose.yml # Orquestração de containers (API, Worker e RabbitMQ)
+├── NotificationSystem.Api # API for user registration and sending messages to RabbitMQ
+├── NotificationSystem.Worker # Worker that consumes messages from the queue and processes notifications
+├── NotificationSystem.Shared # Shared classes between API and Worker
+├── docker-compose.yml # Container orchestration (API, Worker, and RabbitMQ)
 └── README.md
-
-yaml
-Copiar
-Editar
+```
 
 ---
 
-## 🚀 Tecnologias Utilizadas
+## 🚀 Technologies Used
 
 - [.NET 8](https://dotnet.microsoft.com/)
 - [RabbitMQ](https://www.rabbitmq.com/)
-- [MongoDB](https://www.mongodb.com/) (armazenamento de usuários)
+- [MongoDB](https://www.mongodb.com/) (user storage)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 
 ---
 
-## ⚙️ Pré-requisitos
+## ⚙️ Prerequisites
 
-Antes de rodar o projeto, você precisa ter instalado:
+Before running the project, make sure you have installed:
 
 - [Docker](https://www.docker.com/get-started)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (apenas se for rodar localmente sem Docker)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (only if running locally without Docker)
 
 ---
 
-## 📂 Configuração do Ambiente
+## 📂 Environment Setup
 
-O projeto utiliza `docker-compose` para subir:
+The project uses `docker-compose` to start:
 
-1. **RabbitMQ** (com painel de administração em `http://localhost:15672`)
-2. **NotificationSystem.Api** (API .NET acessível em `http://localhost:5001`)
-3. **NotificationSystem.Worker** (processador de mensagens)
-4. **MongoDB** (banco para usuários)
+1. **RabbitMQ** (with management panel at `http://localhost:15672`)
+2. **NotificationSystem.Api** (.NET API accessible at `http://localhost:5001`)
+3. **NotificationSystem.Worker** (message processor)
+4. **MongoDB** (user database)
 
 ---
 
-## ▶️ Executando o Projeto
+## ▶️ Running the Project
 
-### 1️⃣ Clonar o repositório
+### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/seuusuario/NotificationSystem.git
+git clone https://github.com/yourusername/NotificationSystem.git
 cd NotificationSystem
-2️⃣ Subir os containers
-bash
-Copiar
-Editar
+```
+### 2️⃣ Start the containers
+```bash
 docker-compose up --build
-3️⃣ Acessar os serviços
-API: http://localhost:5001
+```
+### 3️⃣ Access the services
+- API: http://localhost:5001
 
-RabbitMQ Management: http://localhost:15672
-Login: guest | Senha: guest
+- RabbitMQ Management: http://localhost:15672
+- Login: guest | Password: guest
+  
+---
 
-MongoDB: localhost:27017
-
-📬 Testando a API
-Criar um usuário
-bash
-Copiar
-Editar
+## 📬 Testing the API
+### 📌 Create a user
+```bash
 POST http://localhost:5001/api/users
 Content-Type: application/json
 
 {
-  "name": "João Silva",
-  "email": "joao@example.com"
+  "name": "John Doe",
+  "email": "john@example.com"
 }
-📌 Ao criar o usuário:
+```
+---
 
-Ele é salvo no MongoDB
+## 📌 When creating a user:
 
-Uma mensagem é enviada para a fila do RabbitMQ
+- It is saved in MongoDB
 
-O Worker consome e processa a notificação
+- A message is sent to the RabbitMQ queue
 
-🛠 Estrutura da Comunicação
-mermaid
-Copiar
-Editar
-flowchart LR
-    A[API - Cria Usuário] -->|Publica Mensagem| B[(RabbitMQ)]
-    B -->|Consome Mensagem| C[Worker - Processa Notificação]
-    A -->|Salva Dados| D[(MongoDB)]
-📄 Licença
-Este projeto é apenas para fins de estudo e prática. Sinta-se à vontade para adaptar e utilizar como base para seus próprios projetos.
+- The Worker consumes and processes the notification
+
+---
+
+## 🛠 Communication Flow
+
+    A[API - Create User] -->|Publish Message| B[(RabbitMQ)]
+    B -->|Consume Message| C[Worker - Process Notification]
+    A -->|Save Data| D[(MongoDB)]
+
+---
+
+## 📄 License
+This project is for study and practice purposes only. Feel free to adapt and use it as a base for your own projects.
