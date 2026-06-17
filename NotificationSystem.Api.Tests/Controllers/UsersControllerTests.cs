@@ -37,7 +37,7 @@ public class UsersControllerTests
                     e.Name == dto.Name &&
                     e.Email == dto.Email &&
                     e.Id != Guid.Empty),
-                "new user.created"),
+                "mainQueue"),
             Times.Once);
     }
 
@@ -50,7 +50,7 @@ public class UsersControllerTests
         var result = await sut.Create(dto);
 
         var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal("Usuário criado e mensagem enviada.", okResult.Value);
+        Assert.Equal("User created and message sent.", okResult.Value);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class UsersControllerTests
         var dto = new UserDto("Pedro", "pedro@email.com");
         _userServiceMock
             .Setup(s => s.CreateUserAsync(dto))
-            .ThrowsAsync(new InvalidOperationException("falha no banco"));
+            .ThrowsAsync(new InvalidOperationException("database failure"));
         var sut = CreateSut();
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => sut.Create(dto));
