@@ -56,3 +56,4 @@ nunit-*.xml
 
 
 .env
+.DS_Store

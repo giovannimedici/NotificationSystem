@@ -19,7 +19,7 @@ public class UsersController : ControllerBase
     {
         await _userService.CreateUserAsync(dto);
 
-        await _messageBus.Publish(new UserCreatedEvent(Guid.NewGuid(), dto.Name, dto.Email), "new user.created");
-        return Ok("Usuário criado e mensagem enviada.");
+        await _messageBus.Publish(new UserCreatedEvent(Guid.NewGuid(), dto.Name, dto.Email), "mainQueue");
+        return Ok("User created and message sent.");
     }
 }
