@@ -1,25 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
-using NotificationSystem.Api.Messaging;
+using NotificationSystem.Api.Contracts.Requests;
 
 [ApiController]
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly IRabbitMqMessageBus _messageBus;
 
-    public UsersController(IUserService userService, IRabbitMqMessageBus messageBus)
+    public UsersController(IUserService userService)
     {
         _userService = userService;
-        _messageBus = messageBus;
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(UserDto dto)
+    public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
     {
-        await _userService.CreateUserAsync(dto);
+        var dto = new UserDto(request.Name, request.Email);
 
-        await _messageBus.Publish(new UserCreatedEvent(Guid.NewGuid(), dto.Name, dto.Email), "mainQueue");
+        if (!await _userService.CreateUserAsync(dto))
+            return BadRequest("An error occurred while creating the user or sending the message.");
+
         return Ok("User created and message sent.");
     }
 }

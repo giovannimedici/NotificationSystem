@@ -14,5 +14,8 @@ public class User
 
     [BsonElement("email")]
     public string Email { get; set; } = string.Empty;
+
+    [BsonElement]
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }
 
