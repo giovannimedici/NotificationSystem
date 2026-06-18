@@ -1,0 +1,1 @@
+public record Email (string To, string Subject, string Body);

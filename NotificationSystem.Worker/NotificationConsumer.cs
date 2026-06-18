@@ -10,11 +10,13 @@ public class NotificationConsumer : BackgroundService
 {
     private readonly ILogger<NotificationConsumer> _logger;
     private readonly RabbitMqSettings _settings;
+    private readonly IEmailService _emailService;
 
-    public NotificationConsumer(ILogger<NotificationConsumer> logger, IOptions<RabbitMqSettings> options)
+    public NotificationConsumer(ILogger<NotificationConsumer> logger, IOptions<RabbitMqSettings> options, IEmailService emailService)
     {
         _logger = logger;
         _settings = options.Value;
+        _emailService = emailService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -51,7 +53,10 @@ public class NotificationConsumer : BackgroundService
                     var json = Encoding.UTF8.GetString(body);
                     var @event = JsonSerializer.Deserialize<UserCreatedEvent>(json);
 
-                    _logger.LogInformation($"Email sent to {@event.Email}");
+                    _logger.LogInformation($"Received event: {json}");
+                    _logger.LogInformation($"Sending email to {@event.Email}");
+
+                    await _emailService.SendEmailAsync(new Email(@event.Email, "Test Subject", "Test Body"));
                 };
 
         await channel.BasicConsumeAsync(queue: _settings.QueueName, autoAck: true, consumer: consumer);
