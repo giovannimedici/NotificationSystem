@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationSystem.Worker",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationSystem.Api.Tests", "NotificationSystem.Api.Tests\NotificationSystem.Api.Tests.csproj", "{5C1812CA-E681-4FE4-A184-63AA7E23E9C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationSystem.Worker.Tests", "NotificationSystem.Worker.Tests\NotificationSystem.Worker.Tests.csproj", "{E5B43097-132B-48CE-AEBE-A2CD9A3C916A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{5C1812CA-E681-4FE4-A184-63AA7E23E9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C1812CA-E681-4FE4-A184-63AA7E23E9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C1812CA-E681-4FE4-A184-63AA7E23E9C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5B43097-132B-48CE-AEBE-A2CD9A3C916A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5B43097-132B-48CE-AEBE-A2CD9A3C916A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5B43097-132B-48CE-AEBE-A2CD9A3C916A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5B43097-132B-48CE-AEBE-A2CD9A3C916A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
