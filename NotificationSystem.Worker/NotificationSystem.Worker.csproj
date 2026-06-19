@@ -15,4 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\NotificationSystem.Shared\NotificationSystem.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="NotificationSystem.Worker.Tests" />
+  </ItemGroup>
 </Project>

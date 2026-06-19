@@ -34,7 +34,7 @@ public class NotificationConsumer : BackgroundService
             new AmqpTcpEndpoint("localhost"),
             new AmqpTcpEndpoint("rabbitmq", int.Parse(_settings.Port))
         };
-        
+
         var connection = await factory.CreateConnectionAsync(endpoints);
         IChannel channel = await connection.CreateChannelAsync();
 
@@ -42,23 +42,43 @@ public class NotificationConsumer : BackgroundService
         {
             { "x-dead-letter-exchange", "system.dlx" },
             { "x-dead-letter-routing-key", "message.expired" },
-            { "x-message-ttl", 15000 } 
+            { "x-message-ttl", 15000 }
         };
         await channel.QueueDeclareAsync(queue: _settings.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: queueArguments);
 
         var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.ReceivedAsync += async (ch, ea) =>
-                {
-                    var body = ea.Body.ToArray();
-                    var json = Encoding.UTF8.GetString(body);
-                    var @event = JsonSerializer.Deserialize<UserCreatedEvent>(json);
+        consumer.ReceivedAsync += async (_, ea) =>
+        {
+            var json = Encoding.UTF8.GetString(ea.Body.ToArray());
+            await ProcessMessageAsync(json, channel, ea.DeliveryTag, stoppingToken);
+        };
 
-                    _logger.LogInformation($"Received event: {json}");
-                    _logger.LogInformation($"Sending email to {@event.Email}");
+        await channel.BasicConsumeAsync(queue: _settings.QueueName, autoAck: false, consumer: consumer);
+    }
 
-                    await _emailService.SendEmailAsync(new Email(@event.Email, "Test Subject", "Test Body"));
-                };
+    internal async Task ProcessMessageAsync(
+        string json,
+        IChannel channel,
+        ulong deliveryTag,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var @event = JsonSerializer.Deserialize<UserCreatedEvent>(json)
+                ?? throw new JsonException("Deserialized event is null.");
 
-        await channel.BasicConsumeAsync(queue: _settings.QueueName, autoAck: true, consumer: consumer);
+            _logger.LogInformation($"Received event: {json}");
+            _logger.LogInformation($"Sending email to {@event.Email}");
+
+            await _emailService.SendEmailAsync(new Email(@event.Email, "Test Subject", "Test Body"));
+            await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken);
+
+            _logger.LogInformation($"Successfully processed message: {json}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error processing message: {json}");
+            await channel.BasicRejectAsync(deliveryTag, requeue: false, cancellationToken);
+        }
     }
 }
