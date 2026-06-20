@@ -11,7 +11,7 @@ builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("Mo
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
-builder.Services.AddScoped<IRabbitMqMessageBus, RabbitMqMessageBus>();
+builder.Services.AddSingleton<IRabbitMqMessageBus, RabbitMqMessageBus>();
 builder.WebHost.UseUrls("http://0.0.0.0:5001");
 
 

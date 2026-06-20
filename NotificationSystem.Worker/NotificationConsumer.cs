@@ -22,6 +22,8 @@ public class NotificationConsumer : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation($"Connecting to RabbitMQ at {_settings.Hostname}:{_settings.Port}");
+        await Task.Delay(30000);
+
         var factory = new ConnectionFactory
         {
             HostName = _settings.Hostname,
@@ -38,6 +40,7 @@ public class NotificationConsumer : BackgroundService
         var connection = await factory.CreateConnectionAsync(endpoints);
         IChannel channel = await connection.CreateChannelAsync();
 
+        _logger.LogInformation("Succesfully connected to rabbitmq...");
         var queueArguments = new Dictionary<string, object>
         {
             { "x-dead-letter-exchange", "system.dlx" },
@@ -46,6 +49,7 @@ public class NotificationConsumer : BackgroundService
         };
         await channel.QueueDeclareAsync(queue: _settings.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: queueArguments);
 
+        _logger.LogInformation($"Waiting for messages in queue: {_settings.QueueName}");
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (_, ea) =>
         {
