@@ -21,7 +21,7 @@ public class EmailService : IEmailService
     {
         try
         {
-            _logger.LogInformation($"Sending email to {email.To} with subject {email.Subject} and body {email.Body}");
+            _logger.LogInformation("Sending email to {To} with subject {Subject} and body {Body}", email.To, email.Subject, email.Body);
 
             await _emailSender.SendAsync(
                 _emailSettings.SenderEmail,
@@ -29,11 +29,11 @@ public class EmailService : IEmailService
                 email.Subject,
                 email.Body);
 
-            _logger.LogInformation($"Email sent to {email.To}");
+            _logger.LogInformation("Email sent to {To}", email.To);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error sending email to {email.To}");
+            _logger.LogError(ex, "Error sending email to {To}", email.To);
             throw;
         }
     }
