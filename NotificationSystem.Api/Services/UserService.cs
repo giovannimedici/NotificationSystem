@@ -20,16 +20,16 @@ public class UserService : IUserService
         {
             var user = new User { Name = dto.Name, Email = dto.Email };
             await _userRepository.AddUserAsync(user);
-            _logger.LogInformation($"User created with email: {dto.Email}");
+            _logger.LogInformation("User created with email: {Email}", dto.Email);
 
             await _rabbitMqMessageBus.Publish(new UserCreatedEvent(Guid.NewGuid(), dto.Name, dto.Email), "mainQueue");
-            _logger.LogInformation($"Published UserCreatedEvent for email: {dto.Email}");
+            _logger.LogInformation("Published UserCreatedEvent for email: {Email}", dto.Email);
 
             return true;
         }
         catch(Exception ex)
         {
-            _logger.LogError($"Failed to create user or publish message for email: {dto.Email}: {ex.Message}");
+            _logger.LogError(ex, "Failed to create user or publish message for email: {Email}", dto.Email);
             return false;
         }
     }

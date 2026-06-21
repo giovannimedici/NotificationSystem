@@ -21,7 +21,7 @@ public class NotificationConsumer : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation($"Connecting to RabbitMQ at {_settings.Hostname}:{_settings.Port}");
+        _logger.LogInformation("Connecting to RabbitMQ at {Hostname}:{Port}", _settings.Hostname, _settings.Port);
         await Task.Delay(30000);
 
         var factory = new ConnectionFactory
@@ -49,7 +49,7 @@ public class NotificationConsumer : BackgroundService
         };
         await channel.QueueDeclareAsync(queue: _settings.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: queueArguments);
 
-        _logger.LogInformation($"Waiting for messages in queue: {_settings.QueueName}");
+        _logger.LogInformation("Waiting for messages in queue: {QueueName}", _settings.QueueName);
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (_, ea) =>
         {
@@ -71,17 +71,17 @@ public class NotificationConsumer : BackgroundService
             var @event = JsonSerializer.Deserialize<UserCreatedEvent>(json)
                 ?? throw new JsonException("Deserialized event is null.");
 
-            _logger.LogInformation($"Received event: {json}");
-            _logger.LogInformation($"Sending email to {@event.Email}");
+            _logger.LogInformation("Received event: {EventJson}", json);
+            _logger.LogInformation("Sending email to {Email}", @event.Email);
 
             await _emailService.SendEmailAsync(new Email(@event.Email, "Test Subject", "Test Body"));
             await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken);
 
-            _logger.LogInformation($"Successfully processed message: {json}");
+            _logger.LogInformation("Successfully processed message: {MessageJson}", json);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error processing message: {json}");
+            _logger.LogError(ex, "Error processing message: {MessageJson}", json);
             await channel.BasicRejectAsync(deliveryTag, requeue: false, cancellationToken);
         }
     }
