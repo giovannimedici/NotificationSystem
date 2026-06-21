@@ -90,9 +90,9 @@ Content-Type: application/json
 
 ## 🛠 Communication Flow
 
-    A[API - Create User] -->|Publish Message| B[(RabbitMQ)]
-    B -->|Consume Message| C[Worker - Process Notification]
-    A -->|Save Data| D[(MongoDB)]
+```mermaid    A[API - Create User] -->|Publish Message| B[(RabbitMQ)] ```
+```mermaid    B -->|Consume Message| C[Worker - Process Notification] ```
+```mermaid    A -->|Save Data| D[(MongoDB)] ```
 
 ---
 
