@@ -1,73 +1,90 @@
 # 📨 NotificationSystem
 
-Sample project to practice messaging with **RabbitMQ** using **.NET** (API + Worker) with Docker containers.
+A production-style **.NET microservices** sample demonstrating asynchronous messaging with **RabbitMQ**, built with an **API + Worker** architecture and fully containerized with **Docker**.
+
+This project showcases practical experience with distributed systems, message queues, and clean separation of concerns — patterns commonly used in real-world backend and integration projects.
+
+---
+
+## 🔍 Overview
+
+`NotificationSystem` simulates a user registration flow where:
+
+1. A client calls the **API** to register a new user.
+2. The user is persisted in **MongoDB**.
+3. A notification event is published to **RabbitMQ**.
+4. A dedicated **Worker** service consumes the message asynchronously and processes the notification.
+
+This decoupled design illustrates how to build scalable, event-driven systems where the API stays responsive while background processing happens independently.
 
 ---
 
 ## 📌 Project Structure
+
 ```bash
 NotificationSystem/
-├── NotificationSystem.Api # API for user registration and sending messages to RabbitMQ
-├── NotificationSystem.Worker # Worker that consumes messages from the queue and processes notifications
-├── NotificationSystem.Shared # Shared classes between API and Worker
-├── docker-compose.yml # Container orchestration (API, Worker, and RabbitMQ)
+├── NotificationSystem.Api      # REST API for user registration and message publishing
+├── NotificationSystem.Worker   # Background service that consumes and processes notifications
+├── NotificationSystem.Shared   # Shared models/contracts between API and Worker
+├── docker-compose.yml          # Full environment orchestration (API, Worker, RabbitMQ, MongoDB)
 └── README.md
 ```
 
 ---
 
-## 🚀 Technologies Used
+## 🚀 Tech Stack
 
-- [.NET 8](https://dotnet.microsoft.com/)
-- [RabbitMQ](https://www.rabbitmq.com/)
-- [MongoDB](https://www.mongodb.com/) (user storage)
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
+- [.NET 8](https://dotnet.microsoft.com/) — API and Worker services
+- [RabbitMQ](https://www.rabbitmq.com/) — asynchronous messaging / event broker
+- [MongoDB](https://www.mongodb.com/) — user data persistence
+- [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/) — containerized environment
 
 ---
 
 ## ⚙️ Prerequisites
 
-Before running the project, make sure you have installed:
-
 - [Docker](https://www.docker.com/get-started)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (only if running locally without Docker)
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) *(optional, only for running services outside Docker)*
 
 ---
 
-## 📂 Environment Setup
+## 📂 Environment
 
-The project uses `docker-compose` to start:
+`docker-compose` provisions the entire stack with a single command:
 
-1. **RabbitMQ** (with management panel at `http://localhost:15672`)
-2. **NotificationSystem.Api** (.NET API accessible at `http://localhost:5001`)
-3. **NotificationSystem.Worker** (message processor)
-4. **MongoDB** (user database)
+| Service                     | Description                          | URL                              |
+|------------------------------|---------------------------------------|-----------------------------------|
+| **NotificationSystem.Api**   | REST API                              | `http://localhost:5001`          |
+| **NotificationSystem.Worker**| Background message consumer           | —                                 |
+| **RabbitMQ**                 | Message broker + management UI        | `http://localhost:15672`         |
+| **MongoDB**                  | User data storage                     | internal container network       |
 
 ---
 
-## ▶️ Running the Project
+## ▶️ Getting Started
 
-### 1️⃣ Clone the repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/NotificationSystem.git
 cd NotificationSystem
 ```
-### 2️⃣ Start the containers
+
+### 2. Build and start the containers
 ```bash
 docker-compose up --build
 ```
-### 3️⃣ Access the services
-- API: http://localhost:5001
 
-- RabbitMQ Management: http://localhost:15672
-- Login: guest | Password: guest
-  
+### 3. Access the services
+- **API:** http://localhost:5001
+- **RabbitMQ Management UI:** http://localhost:15672
+- **Credentials:** `guest` / `guest`
+
 ---
 
-## 📬 Testing the API
-### 📌 Create a user
-```bash
+## 📬 API Usage
+
+### Create a user
+```http
 POST http://localhost:5001/api/users
 Content-Type: application/json
 
@@ -76,15 +93,11 @@ Content-Type: application/json
   "email": "john@example.com"
 }
 ```
----
 
-## 📌 When creating a user:
-
-- It is saved in MongoDB
-
-- A message is sent to the RabbitMQ queue
-
-- The Worker consumes and processes the notification
+**What happens behind the scenes:**
+- The user record is saved to MongoDB.
+- A notification event is published to a RabbitMQ queue.
+- The Worker service consumes the event and processes the notification asynchronously.
 
 ---
 
@@ -96,7 +109,23 @@ graph LR
     B -->|Consume Message| C[Worker - Process Notification]
     A -->|Save Data| D[(MongoDB)]
 ```
+
+---
+
+## 💡 Why This Project
+
+This repository was built to demonstrate hands-on experience with:
+
+- Designing **event-driven, decoupled architectures**
+- Implementing **producer/consumer patterns** with RabbitMQ
+- Structuring multi-service **.NET solutions** with shared contracts
+- Containerizing full environments with **Docker Compose**
+- Writing clean, maintainable backend code following separation-of-concerns principles
+
+Feel free to explore the source code or reach out if you'd like to discuss similar work for your project — backend APIs, message-driven systems, and microservices integrations are areas I actively work in.
+
 ---
 
 ## 📄 License
-This project is for study and practice purposes only. Feel free to adapt and use it as a base for your own projects.
+
+This project was built for portfolio and educational purposes. Feel free to use it as a reference or starting point.
